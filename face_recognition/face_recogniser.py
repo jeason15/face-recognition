@@ -5,10 +5,16 @@ Face = namedtuple('Face', 'top_prediction bb all_predictions')
 BoundingBox = namedtuple('BoundingBox', 'left top right bottom')
 
 
+# TODO: Alter the behavior so that if a prediction is less than 50% confidence, we return back a "not found"
 def top_prediction(idx_to_class, probs):
-    top_label = probs.argmax()
-    return Prediction(label=idx_to_class[top_label], confidence=probs[top_label])
-
+    print(idx_to_class)
+    print(probs)
+    if probs[probs.argmax()] > .5:
+        top_label = probs.argmax()
+        return Prediction(label=idx_to_class[top_label], confidence=probs[top_label])
+    else:
+        print(probs.argmax())
+        return Prediction(label="Person Not Recognized", confidence=.99)
 
 def to_predictions(idx_to_class, probs):
     return [Prediction(label=idx_to_class[i], confidence=prob) for i, prob in enumerate(probs)]
